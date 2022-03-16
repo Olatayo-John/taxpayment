@@ -82,6 +82,12 @@
 				</li>
 
 				<li class="nav-item">
+					<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+						Logs
+					</a>
+				</li>
+
+				<li class="nav-item">
 					<a href="<?php echo base_url('contact-us') ?>" class="nav-link" style="<?php echo ($url == 'contact-us') ? 'border-bottom: 2px solid #fff;' : '' ?>">
 						Contact Us
 					</a>

@@ -65,6 +65,7 @@ $route['import-sms'] = 'User/import_sms';
 $route['send-sms'] = 'User/send_sms';
 $route['payment'] = 'User/payment';
 $route['hits'] = 'User/get_PaymentLinkHits';
+$route['logs'] = 'User/get_sent';
 
 
 $route['404_override'] = '';

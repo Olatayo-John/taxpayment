@@ -282,4 +282,16 @@ class User extends CI_Controller
 		$this->load->view('user/hits');
 		$this->load->view('templates/footer');
 	}
+
+	//get all sentLinks
+	public function get_sent()
+	{
+		$res = $this->UserMdl->get_sent();
+		$data['title'] = "logs";
+		$data['sent'] = $res;
+
+		$this->load->view('templates/header', $data);
+		$this->load->view('user/sent');
+		$this->load->view('templates/footer');
+	}
 }

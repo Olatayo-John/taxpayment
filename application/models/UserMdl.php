@@ -10,6 +10,13 @@ class UserMdl extends CI_Model
         exit;
     }
 
+    public function get_sent()
+    {
+        $query = $this->db->get('sent');
+        return $query;
+        exit;
+    }
+
     public function save_PaymentLinkHit()
     {
         $data = array(
