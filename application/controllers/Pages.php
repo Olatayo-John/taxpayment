@@ -34,7 +34,7 @@ class Pages extends CI_Controller
 		} else {
 			$recaptchaResponse = trim($this->input->post('g-recaptcha-response'));
 			$userIp = $this->input->ip_address();
-			$secret = "6LdT_UIaAAAAAOM8F3GM2Koi4sTapfRwNMfYYAjS";
+			$secret = "6Lec4E4aAAAAAE572v5dAT3Qwn9B-IreUdtlHgHi";
 
 			$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
 

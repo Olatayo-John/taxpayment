@@ -143,6 +143,8 @@ class User extends CI_Controller
 							$notsentFlag = true;
 							}
 						}
+
+						curl_close($req);
 					}
 
 					if (count($notsentArr) > 0 || $notsentFlag !== null) {
@@ -155,7 +157,7 @@ class User extends CI_Controller
 					}
 
 					$data['invalidNo'] = "";
-
+					
 				}
 			} else {
 				if (empty($_POST['mobile']) || !isset($_POST['mobile']) || strlen($_POST['mobile']) !== 10 || !is_numeric($_POST['mobile'])) {
@@ -195,6 +197,8 @@ class User extends CI_Controller
 					$data['httpCode'] = $httpCode;
 					$data['Jresult'] = $Jresult;
 				}
+
+				curl_close($req);
 			}
 		} else {
 			$data['status'] = false;
