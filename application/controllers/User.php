@@ -135,12 +135,37 @@ class User extends CI_Controller
 						// $httpCode = 44;
 
 						if ($httpCode !== 200) {
+							$data = array(
+								'mobile' => $mobile,
+								'msg' => $_POST['msgBody'],
+								'error' => $httpCode . " SERVER ERROR",
+								'status' => "ERROR"
+							);
+							$this->UserMdl->save_sent($data);
+
 							array_push($notsentArr, array("error" => $httpCode . " SERVER ERROR", "mobile" => $mobile));
 							$notsentFlag = true;
 						} else {
 							if ($Jresult['STATUS'] == "ERROR") {
+								$data = array(
+									'mobile' => $mobile,
+									'msg' => $_POST['msgBody'],
+									'error' => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'],
+									'status' => "ERROR"
+								);
+								$this->UserMdl->save_sent($data);
+								
 								array_push($notsentArr, array("error" => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'], "mobile" => $mobile));
-							$notsentFlag = true;
+								$notsentFlag = true;
+
+							}else{
+								$data = array(
+									'mobile' => $mobile,
+									'msg' => $_POST['msgBody'],
+									'error' => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'],
+									'status' => "OK"
+								);
+								$this->UserMdl->save_sent($data);
 							}
 						}
 
@@ -157,7 +182,6 @@ class User extends CI_Controller
 					}
 
 					$data['invalidNo'] = "";
-					
 				}
 			} else {
 				if (empty($_POST['mobile']) || !isset($_POST['mobile']) || strlen($_POST['mobile']) !== 10 || !is_numeric($_POST['mobile'])) {
@@ -179,13 +203,37 @@ class User extends CI_Controller
 					// $httpCode = 44;
 
 					if ($httpCode !== 200) {
+						$data = array(
+							'mobile' => $_POST['mobile'],
+							'msg' => $_POST['msgBody'],
+							'error' => $httpCode . " SERVER ERROR",
+							'status' => "ERROR"
+						);
+						$this->UserMdl->save_sent($data);
+
 						$data['status'] = false;
 						$data['msg'] = $httpCode . " SERVER ERROR";
 					} else {
 						if ($Jresult['STATUS'] == "ERROR") {
+							$data = array(
+								'mobile' => $_POST['mobile'],
+								'msg' => $_POST['msgBody'],
+								'error' => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'],
+								'status' => "ERROR"
+							);
+							$this->UserMdl->save_sent($data);
+
 							$data['status'] = false;
 							$data['msg'] = $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'];
 						} else if ($Jresult['STATUS'] == "OK") {
+							$data = array(
+								'mobile' => $_POST['mobile'],
+								'msg' => $_POST['msgBody'],
+								'error' => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'],
+								'status' => "OK"
+							);
+							$this->UserMdl->save_sent($data);
+
 							$data['status'] = true;
 							$data['msg'] = $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'];
 							// $this->session->set_userdata('valid', $data['msg']);

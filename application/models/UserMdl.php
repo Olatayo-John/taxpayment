@@ -2,6 +2,14 @@
 
 class UserMdl extends CI_Model
 {
+    public function save_sent($data)
+    {
+        $query = $this->db->insert('sent', $data);
+        return true;
+
+        exit;
+    }
+
     public function save_PaymentLinkHit()
     {
         $data = array(
