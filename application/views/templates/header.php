@@ -70,16 +70,16 @@
 				<?php endif; ?> -->
 
 				<li class="nav-item">
-						<a href="<?php echo base_url('home') ?>" class="nav-link" style="<?php echo ($url == 'home') ? 'border-bottom: 2px solid #fff;' : '' ?>">
-							Home
-						</a>
-					</li>
+					<a href="<?php echo base_url('home') ?>" class="nav-link" style="<?php echo ($url == 'home') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+						Home
+					</a>
+				</li>
 
-					<li class="nav-item">
-						<a href="<?php echo base_url('hits') ?>" class="nav-link" style="<?php echo ($url == 'hits') ? 'border-bottom: 2px solid #fff;' : '' ?>">
-							Hits
-						</a>
-					</li>
+				<li class="nav-item">
+					<a href="<?php echo base_url('hits') ?>" class="nav-link" style="<?php echo ($url == 'hits') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+						Hits
+					</a>
+				</li>
 
 				<li class="nav-item">
 					<a href="<?php echo base_url('contact-us') ?>" class="nav-link" style="<?php echo ($url == 'contact-us') ? 'border-bottom: 2px solid #fff;' : '' ?>">
@@ -95,7 +95,7 @@
 						</a>
 					</li>
 				<?php endif; ?>
-				
+
 			</ul>
 		</div>
 
@@ -109,11 +109,13 @@
 
 		<!-- ajax-failed -->
 		<div class="ajax_alert_div ajax_err_div" style="padding:8px;display:none;z-index: 9999;">
+			<span class="ajax_err_div_close">&times;</span>
 			<strong class="ajax_res_err text-dark"></strong>
 		</div>
 
 		<!-- ajax-success -->
 		<div class="ajax_alert_div ajax_succ_div" style="padding:8px;display:none;z-index: 9999;">
+			<span class="ajax_succ_div_close">&times;</span>
 			<strong class="ajax_res_succ text-dark"></strong>
 		</div>
 

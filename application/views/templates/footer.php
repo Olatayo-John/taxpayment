@@ -1,9 +1,7 @@
 </div>
 
 
-
 <script type="text/javascript">
-
 	$('[data-toggle="tooltip"]').tooltip();
 
 
@@ -13,11 +11,11 @@
 	$(document).ready(function() {
 
 		$(document).on("click", ".ajax_succ_div_close", function() {
-			$(".ajax_succ_div").fadeOut();
+			$(".ajax_succ_div").hide();
 		});
 
 		$(document).on("click", ".ajax_err_div_close", function() {
-			$(".ajax_err_div").fadeOut();
+			$(".ajax_err_div").hide();
 		});
 	})
 </script>

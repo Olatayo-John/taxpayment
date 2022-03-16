@@ -8,7 +8,7 @@ class UserMdl extends CI_Model
             'ip' => $_SERVER['REMOTE_ADDR'],
             'number' => null
         );
-        $query = $this->db->insert('paymentHit', $data);
+        $query = $this->db->insert('paymenthit', $data);
         if ($query) {
             return true;
         } else {
@@ -20,7 +20,7 @@ class UserMdl extends CI_Model
 
     public function get_PaymentLinkHits()
     {
-        $query = $this->db->get('paymentHit');
+        $query = $this->db->get('paymenthit');
         return $query;
         exit;
     }

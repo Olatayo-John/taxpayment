@@ -64,19 +64,32 @@ class User extends CI_Controller
 	public function import_sms()
 	{
 		if ($_FILES['smsFile']['size'] > 0) {
+			$flag = null;
+			$invalidNo = array();
+			$data[] = $this->security->get_csrf_hash(); //token
+
 			$file_data = fopen($_FILES['smsFile']['tmp_name'], 'r');
 			fgetcsv($file_data);
-			$data[] = $this->security->get_csrf_hash(); //token
 			while ($row = fgetcsv($file_data)) {
-				$data[] = array(
-					'Phonenumber' => $row[0],
-				);
+				//validate each number i.e row[0]
+				if (!empty($row[0]) && isset($row[0]) && strlen($row[0]) == 10 && is_numeric($row[0])) {
+					array_push($data, $row[0]);
+				} else {
+					array_push($invalidNo, $row[0]);
+					$flag = true;
+				}
+			}
+
+			//check for flag=true i.e triggered by invalid number found
+			if ($flag !== null) {
+				$data['status'] = false;
+				$data['msg'] = "Found Invalid numbers";
+				$data['invalidNo'] = $invalidNo;
 			}
 		} else {
 			$data['status'] = false;
 			$data['msg'] = "No file uploaded";
 			$data['smsFile'] = $_FILES['smsFile'];
-			$data['token'] = $this->security->get_csrf_hash();
 		}
 
 		// $data['token'] = $this->security->get_csrf_hash();
@@ -88,39 +101,107 @@ class User extends CI_Controller
 	{
 		if (count($_POST) > 0) {
 			if (is_array($_POST['mobile'])) {
-				$notsentArr = array();
+				$invalidNo = array();
+				$flag = null;
+
+				//validate each is a validNumber
 				foreach ($_POST['mobile'] as $mobile) {
-					//validate each is a validNumber
-					if (empty($mobile) || !isset($mobile) || strlen($mobile) !== 13 || !is_numeric($mobile)) {
-						array_push($notsentArr, $mobile);
+					if (empty($mobile) || !isset($mobile) || strlen($mobile) !== 10 || !is_numeric($mobile)) {
+						array_push($invalidNo, $mobile);
+						$flag = true;
 					}
 				}
 
-				if (count($notsentArr) > 0) {
+				if (count($invalidNo) > 0 || $flag !== null) {
 					$data['status'] = false;
-					$data['msg'] = "Found Invalid data";
-					$data['notsentArr'] = $notsentArr;
-				} else if (count($notsentArr) == 0) {
-					//API send to multiple No.
-					#code...
+					$data['msg'] = "Found Invalid numbers";
+					$data['invalidNo'] = $invalidNo;
+					$data['notsentArr'] = "";
+				} else if (count($invalidNo) == 0) {
+					$notsentArr = array();
+					$notsentFlag = null;
 
-					$data['status'] = true;
-					$data['msg'] = "";
+					foreach ($_POST['mobile'] as $mobile) {
+						//API send to multiple No.
+						$url = "http://savshka.in/api/pushsms?user=swachh&authkey=926pJyyVe2aK&sender=NKTECI&mobile=" . $mobile . "&text=";
+						$req = curl_init();
+						$complete_url = $url . curl_escape($req, $_POST['msgBody']) . "&rpt=0";
+						curl_setopt($req, CURLOPT_URL, $complete_url);
+						curl_setopt($req, CURLOPT_RETURNTRANSFER, TRUE);
+						$result = curl_exec($req);
+
+						$httpCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
+						$Jresult = json_decode($result, true);
+						// $httpCode = 44;
+
+						if ($httpCode !== 200) {
+							array_push($notsentArr, array("error" => $httpCode . " SERVER ERROR", "mobile" => $mobile));
+							$notsentFlag = true;
+						} else {
+							if ($Jresult['STATUS'] == "ERROR") {
+								array_push($notsentArr, array("error" => $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'], "mobile" => $mobile));
+							$notsentFlag = true;
+							}
+						}
+					}
+
+					if (count($notsentArr) > 0 || $notsentFlag !== null) {
+						$data['status'] = false;
+						$data['msg'] = "Unable to send to these numbers";
+						$data['notsentArr'] = $notsentArr;
+					} else {
+						$data['status'] = true;
+						$data['msg'] = "";
+					}
+
+					$data['invalidNo'] = "";
+
 				}
 			} else {
-				if (empty($_POST['mobile']) || !isset($_POST['mobile']) || strlen($_POST['mobile']) !== 13 || !is_numeric($_POST['mobile'])) {
+				if (empty($_POST['mobile']) || !isset($_POST['mobile']) || strlen($_POST['mobile']) !== 10 || !is_numeric($_POST['mobile'])) {
 					$data['status'] = false;
 					$data['msg'] = "Invalid Mobile format";
-				}else{
+					$data['invalidNo'] = array($_POST['mobile']);
+					$data['notsentArr'] = "";
+				} else {
 					//API send to single No.
+					$url = "http://savshka.in/api/pushsms?user=swachh&authkey=926pJyyVe2aK&sender=NKTECI&mobile=" . $_POST['mobile'] . "&text=";
+					$req = curl_init();
+					$complete_url = $url . curl_escape($req, $_POST['msgBody']) . "&rpt=0";
+					curl_setopt($req, CURLOPT_URL, $complete_url);
+					curl_setopt($req, CURLOPT_RETURNTRANSFER, TRUE);
+					$result = curl_exec($req);
 
-					$data['status'] = true;
-					$data['msg'] = "";
+					$httpCode = curl_getinfo($req, CURLINFO_HTTP_CODE);
+					$Jresult = json_decode($result, true);
+					// $httpCode = 44;
+
+					if ($httpCode !== 200) {
+						$data['status'] = false;
+						$data['msg'] = $httpCode . " SERVER ERROR";
+					} else {
+						if ($Jresult['STATUS'] == "ERROR") {
+							$data['status'] = false;
+							$data['msg'] = $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'];
+						} else if ($Jresult['STATUS'] == "OK") {
+							$data['status'] = true;
+							$data['msg'] = $Jresult['RESPONSE']['CODE'] . " - " . $Jresult['RESPONSE']['INFO'];
+							// $this->session->set_userdata('valid', $data['msg']);
+						}
+					}
+
+					$data['invalidNo'] = "";
+					$data['notsentArr'] = "";
+					$data['httpCode'] = $httpCode;
+					$data['Jresult'] = $Jresult;
 				}
 			}
 		} else {
 			$data['status'] = false;
-			$data['msg'] = "Missiing data";
+			$data['msg'] = "Missing data";
+			$data['e_AfterSend'] = "";
+			$data['invalidNo'] = "";
+			$data['notsentArr'] = "";
 		}
 
 		$data['token'] = $this->security->get_csrf_hash();

@@ -9,11 +9,10 @@
                 <form enctype="multipart/form-data" method="post" id="smsUploadFile">
                     <div class="modal-body">
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name() ?>" value="<?php echo $this->security->get_csrf_hash() ?>" class="csrf">
-                        <!-- <h6 class="font-weight-bolder text-danger">
-                            *CSV file must have header of only "Phonenumber"
-                        </h6> -->
+
                         <input type="file" name="smsFile" id="smsFile" class="form-control" accept=".csv">
                         <span class="e_upload err"></span>
+                        <div class="e_invalid err"></div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button class="btn btn-secondary smsCloseImportModal" type="button">Close</button>
@@ -38,7 +37,7 @@
             <input type="number" name="mobile" class="form-control mobile" id="mobile" placeholder="Mobile number">
             <select class="form-control mobileSelect" name="mobileSelect" id="mobileSelect" readonly con="false">
             </select>
-            <span class="e_mobile err">Invalid mobile length</span>
+            <span class="e_mobile err"></span>
         </div>
 
         <div class="form-group">
@@ -46,7 +45,7 @@
             <textarea class="form-control msgBody" rows="9" name="msgBody"></textarea>
         </div>
 
-        <div class="">
+        <div class="form-group">
             <button class="btn btn-block smsSendBtn">Send</button>
         </div>
     </form>
@@ -88,6 +87,9 @@
         $('#smsUploadFile').on('submit', function(e) {
             e.preventDefault();
 
+            $(".ajax_succ_div,.ajax_err_div").hide();
+            $(".ajax_res_err,.ajax_res_succ").empty();
+
             var smsFile = $('#smsFile').val();
 
             if (smsFile == "" || smsFile == null) {
@@ -106,22 +108,34 @@
                 cache: false,
                 processData: false,
                 beforeSend: function(res) {
-                    $('.e_upload').hide();
+                    $('.e_upload,.e_OnSend,.e_mobile').hide();
 
                     $('.smsImportBtn').attr('disabled', 'readonly').html('Importing...').css({
                         'cursor': 'not-allowed',
                         'background': '#F44336'
                     });
+
+                    $(".ajax_succ_div,.ajax_err_div").hide();
+                    $(".ajax_res_err,.ajax_res_succ").empty();
                 },
                 success: function(res) {
                     if (res.status === false) {
-                        $('.e_upload').show().html(res.msg);
 
-                        $('.csrf').val(res.token);
+                        $(".ajax_res_err").append('<div>' + res.msg + '</div>');
+
+                        if (parseInt(res.invalidNo.length) > 0) {
+                            for (i = 0; i < res.invalidNo.length; i++) {
+                                $(".ajax_res_err").append('<div>' + res.invalidNo[i] + '</div>')
+                            }
+                        }
+
+                        $(".ajax_err_div").fadeIn();
+
+                        $('.smsModal').hide();
                     } else {
                         if (parseInt(res.length) > 1) {
                             for (i = 1; i < res.length; i++) {
-                                $('#mobileSelect').append('<option disabled class="mobileSelectOptions">+91' + res[i].Phonenumber + '</option>').attr('con', 'true');
+                                $('#mobileSelect').append('<option disabled class="mobileSelectOptions">' + res[i] + '</option>').attr('con', 'true');
                             }
 
                             $('.mobile').hide();
@@ -132,19 +146,19 @@
                         } else {
                             $('.e_upload').show().html("Empty file");
                         }
-
-                        $('.csrf').val(res[0]);//token pos in resDataArray
                     }
+
+                    $('.csrf').val(res[0]); //token pos in resDataArray
 
                     $('.smsImportBtn').removeAttr('disabled', 'readonly').html('Import').css({
                         'cursor': 'pointer',
                         'color': '#fff',
                         'background': '#4CAF50'
-                    });//reset importBtn
+                    }); //reset importBtn
                 },
                 error: function(res) {
                     alert('Error importing data');
-                    // window.location.reload();
+                    window.location.reload();
                 }
             });
         });
@@ -153,6 +167,9 @@
         //send
         $('.smsSendBtn').click(function(e) {
             e.preventDefault();
+
+            $(".ajax_succ_div,.ajax_err_div").hide();
+            $(".ajax_res_err,.ajax_res_succ").empty();
 
             var csrfName = $('.csrf').attr('name');
             var csrfHash = $('.csrf').val();
@@ -210,23 +227,57 @@
                     mobile: mobile,
                     msgBody: msgBody
                 },
-                dataType:"json",
+                dataType: "json",
                 beforeSend: function(res) {
-                    $('.smssendmultiplelinkbtn').attr('disabled', 'disabled');
+                    $('.smsSendBtn').attr('disabled', 'readonly').html('Sending...').css({
+                        'cursor': 'not-allowed',
+                        'background': '#F44336'
+                    });
+
+                    $('.e_mobile').hide();
+
+                    $(".ajax_succ_div,.ajax_err_div").hide();
+                    $(".ajax_res_err,.ajax_res_succ").empty();
                 },
-                success: function(res){
-                    console.log(res);
-                    
+                success: function(res) {
+                    // console.log(res);
+
                     if (res.status === false) {
-                        $('.e_mobile ').show().html(res.msg);
-                    } else if (res.status === true){
+                        $(".ajax_res_err").append('<div>' + res.msg + '</div>');
+
+                        if (parseInt(res.invalidNo.length) > 0) {
+                            for (i = 0; i < res.invalidNo.length; i++) {
+                                $(".ajax_res_err").append('<div>' + res.invalidNo[i] + '</div>')
+                            }
+                        }
+                        if (parseInt(res.notsentArr.length) > 0) {
+                            for (i = 0; i < res.notsentArr.length; i++) {
+                                $(".ajax_res_err").append('<div>' + res.notsentArr[i].error + ' [ ' + res.notsentArr[i].mobile + ' ]</div>')
+                            }
+                        }
+
+                        $(".ajax_err_div").fadeIn();
+
+                    } else if (res.status === true) {
+                        $(".ajax_res_succ").append('<div>' + res.msg + '</div>');
+
+                        $(".ajax_succ_div").fadeIn();
+
                         // window.location.reload();
                     }
+
+                    //reset
+                    $('.smsSendBtn').removeAttr('disabled', 'readonly').html('Send').css({
+                        'cursor': 'pointer',
+                        'color': '#fff',
+                        'background': '#4CAF50'
+                    });
 
                     $('.csrf').val(res.token);
                 },
                 error: function(res) {
                     alert('Error importing data');
+
                     // window.location.reload();
                 }
             })

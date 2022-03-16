@@ -74,6 +74,20 @@ div.spinner-border{
 .alertsuccess,.ajax_succ_div{
 	border-right: 14px solid #8BC34A !important;
 }
+.ajax_succ_div_close,.ajax_err_div_close{
+	position: absolute;
+    top: 0;
+    /* right: -14px; */
+	display: none;
+    left: -14px;
+	height: -webkit-fill-available;
+    background: white;
+    color: #dc3545;
+	cursor: pointer;
+	font-size: 20px;
+    font-weight: 900;
+    /* border: 1px solid red; */
+}
 div.alerterror,div.alertsuccess,.ajax_alert_div{
 	position: fixed;
 	top:60px;

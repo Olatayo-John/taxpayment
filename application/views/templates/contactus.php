@@ -21,7 +21,7 @@
 	</div>
 	<div class="col-md-6 wrapper_div_second">
 		<div class="imagediv text-center mb-5">
-			<img src="<?php echo base_url('assets/images/.png') ?>" class="">
+			<img src="<?php echo base_url('assets/images/logo_dark.png') ?>" class="">
 		</div>
 		<div class="detailsdiv row">
 			<i class="fas fa-map-marker"></i>
