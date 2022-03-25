@@ -75,11 +75,11 @@
 					</a>
 				</li>
 
-				<li class="nav-item">
-					<a href="<?php echo base_url('hits') ?>" class="nav-link" style="<?php echo ($url == 'hits') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+				<!-- <li class="nav-item">
+					<a href="<?php echo base_url('') ?>" class="nav-link" style="<?php echo ($url == '') ? 'border-bottom: 2px solid #fff;' : '' ?>">
 						Hits
 					</a>
-				</li>
+				</li> -->
 
 				<li class="nav-item">
 					<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'border-bottom: 2px solid #fff;' : '' ?>">

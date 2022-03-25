@@ -68,5 +68,8 @@ $route['hits'] = 'User/get_PaymentLinkHits';
 $route['logs'] = 'User/get_sent';
 
 
+$route['vvv'] = 'User/vvv';
+
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

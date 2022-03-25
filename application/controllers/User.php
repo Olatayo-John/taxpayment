@@ -54,6 +54,11 @@ class User extends CI_Controller
 		fwrite($myfile, $txt);
 		$txt = "Nagar Nigam Ghaziabad";
 		fwrite($myfile, $txt);
+
+		// $txt = "Please vote for your city to become No.1\r\nBelow is the link to vote\r\nhttp://localhost/ss2021/rate/74873514\r\n\r\nDownload Swachhta App\r\nhttp://localhost/ss2021/download-swachhta-app\r\n\r\nBest Regards\r\nNITL";
+		// $txt = "Please vote for your city to become No.1\r\nBelow is the link to vote\r\nvarI varII varIII\r\n\r\nDownload Swachhta App\r\nvarI varII varIII\r\n\r\nBest Regards\r\nNITL";
+		// fwrite($myfile, $txt);
+
 		fclose($myfile);
 
 		$data['token'] = $this->security->get_csrf_hash();
@@ -191,10 +196,14 @@ class User extends CI_Controller
 					$data['notsentArr'] = "";
 				} else {
 					//API send to single No.
-					$url = "http://savshka.in/api/pushsms?user=swachh&authkey=926pJyyVe2aK&sender=NKTECI&mobile=" . $_POST['mobile'] . "&text=";
+					// $url = "http://savshka.in/api/pushsms?user=swachh&authkey=926pJyyVe2aK&sender=NKTECI&mobile=" . $_POST['mobile'] . "&text=";
+					// $req = curl_init();
+					// $complete_url = $url . curl_escape($req, $_POST['msgBody']) . "&entityid=1001715674475461342&templateid=1007043429553393803&rpt=0";
+
+					$url = "http://savshka.in/api/pushsms?user=swachh&authkey=926pJyyVe2aK&sender=NKTECI&mobile=" . $_POST['mobile'] . "&text=".urlencode($_POST['msgBody'])."&entityid=1001715674475461342&templateid=1007043429553393803&rpt=0";
 					$req = curl_init();
-					$complete_url = $url . curl_escape($req, $_POST['msgBody']) . "&rpt=0";
-					curl_setopt($req, CURLOPT_URL, $complete_url);
+
+					curl_setopt($req, CURLOPT_URL, $url);
 					curl_setopt($req, CURLOPT_RETURNTRANSFER, TRUE);
 					$result = curl_exec($req);
 

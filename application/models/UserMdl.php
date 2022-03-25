@@ -12,6 +12,7 @@ class UserMdl extends CI_Model
 
     public function get_sent()
     {
+        $this->db->order_by('id','desc');
         $query = $this->db->get('sent');
         return $query;
         exit;
