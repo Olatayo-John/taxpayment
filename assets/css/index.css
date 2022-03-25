@@ -1,3 +1,7 @@
+div.import{
+    display: flex;
+    justify-content: space-between;
+}
 .mobileSelect{
     display: none;
 }

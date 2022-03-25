@@ -29,11 +29,13 @@
 
         <div class="import">
             <button class="btn smsOpenImportModal" type="button" style="background:#294a63;color:#fff">Import</button>
+            <!-- <button class="btn btn-danger smsSampleFile" type="button">Download Sample</button> -->
+			<a href="<?php echo base_url('sms-sample'); ?>" class="smsSampleFile btn btn-danger">Download Sample</a>
         </div>
         <hr>
 
         <div class=" form-group">
-            <label>Mobile</label>
+            <label class="mobileLabel">Mobile</label>
             <input type="number" name="mobile" class="form-control mobile" id="mobile" placeholder="Mobile number">
             <select class="form-control mobileSelect" name="mobileSelect" id="mobileSelect" readonly con="false">
             </select>
@@ -70,7 +72,7 @@
             },
             dataType: "json",
             success: function(res) {
-                console.log(res);
+                // console.log(res);
 
                 $(".msgBody").load("<?php echo base_url('body.txt'); ?>");
 
@@ -121,11 +123,11 @@
                 success: function(res) {
                     if (res.status === false) {
 
-                        $(".ajax_res_err").append('<div>' + res.msg + '</div>');
+                        $(".ajax_res_err").append('<div>' + res.msg + '</div><hr>');
 
-                        if (parseInt(res.invalidNo.length) > 0) {
-                            for (i = 0; i < res.invalidNo.length; i++) {
-                                $(".ajax_res_err").append('<div>' + res.invalidNo[i] + '</div>')
+                        if (parseInt(res.invalidRow.length) > 0) {
+                            for (i = 0; i < res.invalidRow.length; i++) {
+                                $(".ajax_res_err").append('<div>' + res.invalidRow[i] + '</div>')
                             }
                         }
 
@@ -140,6 +142,7 @@
 
                             $('.mobile').hide();
                             $('.mobileSelect').show().css('border', '1px solid #ced4da');
+                            $("label.mobileLabel").html("Data");
                             $('.e_mobile').hide();
 
                             $('.smsModal').hide();
@@ -158,7 +161,7 @@
                 },
                 error: function(res) {
                     alert('Error importing data');
-                    window.location.reload();
+                    // window.location.reload();
                 }
             });
         });
@@ -245,14 +248,12 @@
                     if (res.status === false) {
                         $(".ajax_res_err").append('<div>' + res.msg + '</div>');
 
-                        if (parseInt(res.invalidNo.length) > 0) {
-                            for (i = 0; i < res.invalidNo.length; i++) {
-                                $(".ajax_res_err").append('<div>' + res.invalidNo[i] + '</div>')
-                            }
-                        }
                         if (parseInt(res.notsentArr.length) > 0) {
+                            // if (parseInt(res.DataArr.length) > 0) {
+                            //     $(".ajax_res_err").append('<a></a>')
+                            // }
                             for (i = 0; i < res.notsentArr.length; i++) {
-                                $(".ajax_res_err").append('<div>' + res.notsentArr[i].error + ' [ ' + res.notsentArr[i].mobile + ' ]</div>')
+                                $(".ajax_res_err").append('<div>' + res.notsentArr[i].error + ' [ ' + res.notsentArr[i].data + ' ]</div>')
                             }
                         }
 

@@ -62,6 +62,7 @@ $route['home'] = 'User';
 
 $route['get-body'] = 'User/get_body';
 $route['import-sms'] = 'User/import_sms';
+$route['sms-sample'] = 'User/sample_smsFile';
 $route['send-sms'] = 'User/send_sms';
 $route['payment'] = 'User/payment';
 $route['hits'] = 'User/get_PaymentLinkHits';
