@@ -161,7 +161,7 @@
                 },
                 error: function(res) {
                     alert('Error importing data');
-                    // window.location.reload();
+                    window.location.reload();
                 }
             });
         });
@@ -264,7 +264,7 @@
 
                         $(".ajax_succ_div").fadeIn();
 
-                        // window.location.reload();
+                        window.location.reload();
                     }
 
                     //reset
@@ -279,7 +279,7 @@
                 error: function(res) {
                     alert('Error importing data');
 
-                    // window.location.reload();
+                    window.location.reload();
                 }
             })
         });
