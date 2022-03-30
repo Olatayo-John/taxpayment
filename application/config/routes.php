@@ -66,7 +66,7 @@ $route['sms-sample'] = 'User/sample_smsFile';
 $route['send-sms'] = 'User/send_sms';
 $route['payment'] = 'User/payment';
 $route['hits'] = 'User/get_PaymentLinkHits';
-$route['logs'] = 'User/get_sent';
+$route['sms-logs'] = 'User/get_sent';
 
 
 $route['vvv'] = 'User/vvv';

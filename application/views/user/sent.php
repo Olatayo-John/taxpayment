@@ -3,7 +3,7 @@
 	<table data-toggle="table" data-cache="false" data-search="true" data-show-export="true" data-buttons-prefix="btn-md btn" data-buttons-align="left" data-pagination="true" data-page-size="50" data-sticky-header="true" data-sticky-header-offset-y="60">
 		<thead class="text-light" style="background:#223b55">
 			<tr>
-				<th data-field="Number">Number</th>
+				<th data-field="Number">Mobile</th>
 				<th data-field="Message">Message</th>
 				<th data-field="Response">Response</th>
 				<th data-field="Status">Status</th>

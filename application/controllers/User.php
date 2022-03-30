@@ -107,6 +107,38 @@ class User extends CI_Controller
 					$info .= "," . $row[2];
 				}
 
+				//Email
+				if (empty($row[3]) || !isset($row[3]) || !filter_var($row[3],FILTER_VALIDATE_EMAIL)) {
+					array_push($invalidRow, "Email: " . $row[3] . " at line " . $line);
+					$flag = true;
+				} else {
+					$info .= "," . $row[3];
+				}
+
+				//Amount
+				if (!is_numeric($row[4])) {
+					array_push($invalidRow, "Amount: " . $row[4] . " at line " . $line);
+					$flag = true;
+				} else {
+					$info .= "," . $row[4];
+				}
+
+				//Paid
+				if (!is_numeric($row[5])) {
+					array_push($invalidRow, "Paid: " . $row[5] . " at line " . $line);
+					$flag = true;
+				} else {
+					$info .= "," . $row[5];
+				}
+
+				//Balance
+				if (!is_numeric($row[6])) {
+					array_push($invalidRow, "Balance: " . $row[6] . " at line " . $line);
+					$flag = true;
+				} else {
+					$info .= "," . $row[6];
+				}
+
 				array_push($data, $info);
 				$line = $line + 1;
 			}
@@ -133,11 +165,15 @@ class User extends CI_Controller
 		header("Content-Type: text/csv; charset=utf-8");
 		header("Content-Disposition: attachment; filename=date_sample.csv");
 		$output = fopen("php://output", "w");
-		fputcsv($output, array('Name', 'Mobile', 'PropertyID'));
+		fputcsv($output, array('Name', 'Mobile', 'PropertyID','Email','Amount','Paid','Balance'));
 		$data[] = array(
-			'Name' => 'John',
+			"Name" => "Jane Doe",
 			'Mobile' => '0123456789',
 			'PropertyID' => '002199',
+			'Email' => 'janedoe89@gmail.com',
+			'Amount' => '1000',
+			'Paid' => '400',
+			'Balance' => '600',
 		);
 		foreach ($data as $row) {
 			fputcsv($output, $row);
@@ -150,7 +186,7 @@ class User extends CI_Controller
 	public function send_sms()
 	{
 		if (count($_POST) > 0) {
-			if (is_array($_POST['mobile'])) {
+			if (is_array($_POST['mobile'])) { //multiple
 				$DataArr = array();
 				$notsentArr = array();
 				$notsentFlag = null;
@@ -162,6 +198,10 @@ class User extends CI_Controller
 					$name = $dataInfo[0];
 					$mobileNo = $dataInfo[1];
 					$propertyID = $dataInfo[2];
+					$email = $dataInfo[3];
+					$amount = $dataInfo[4];
+					$paid = $dataInfo[5];
+					$balance = $dataInfo[6];
 					$paymentlink = "https://nagarsewa.uk.gov.in/citizen/withoutAuth/egov-common/pay?consumerCode=PT-248426-" . $propertyID . "&tenantId=uk.munikireti&businessService=PT";
 
 					$msgBody = "Dear " . $name . "\nYour property tax / House tax is due on your property ID : " . $propertyID . "\nPlease pay the tax by the link : " . $paymentlink . "\nbefore " . date("Y-m-d") . " to avoid penalties and legal actions.\nPlease ignore if already paid.\n\nNagar Palika Parishad\nMuni Ki Reti - Dhalwala";
@@ -225,20 +265,9 @@ class User extends CI_Controller
 					$data['msg'] = "";
 				}
 
-				// if (count($DataArr) > 0) {
-				// 	header("Content-Type: text/csv; charset=utf-8");
-				// 	header("Content-Disposition: attachment; filename=processed_data.csv");
-				// 	$output = fopen("php://output", "w");
-				// 	fputcsv($output, array('Name', 'Mobile', 'PropertyID','Link'));
-				// 	foreach ($DataArr as $row) {
-				// 		fputcsv($output, $row);
-				// 	}
-				// 	fclose($output);
-				// }
-
 				$data['DataArr'] = $DataArr;
 				$data['invalidNo'] = "";
-			} else {
+			} else { //single mobile number
 				if (empty($_POST['mobile']) || !isset($_POST['mobile']) || strlen($_POST['mobile']) !== 10 || !is_numeric($_POST['mobile'])) {
 					$data['status'] = false;
 					$data['msg'] = "Invalid Mobile format";

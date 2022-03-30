@@ -55,22 +55,9 @@
 
 		<div class="collapse navbar-collapse" id="coll">
 			<ul class="navbar-nav ml-auto">
-				<!-- <?php if (!$this->session->userdata('logged_in')) : ?>
-					<li class="nav-item">
-						<a href="<?php echo base_url('login') ?>" class="nav-link" style="<?php echo ($url == 'login' || $url == '') ? 'border-bottom: 2px solid #fff;' : '' ?>">
-							Login
-						</a>
-					</li>
-
-					<li class="nav-item">
-						<a href="<?php echo base_url('register') ?>" class="nav-link" style="<?php echo ($url == 'register') ? 'border-bottom: 2px solid #fff;' : '' ?>">
-							Register
-						</a>
-					</li>
-				<?php endif; ?> -->
 
 				<li class="nav-item">
-					<a href="<?php echo base_url('home') ?>" class="nav-link" style="<?php echo ($url == 'home') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+					<a href="<?php echo base_url('home') ?>" class="nav-link" style="<?php echo ($url == 'home' || $url == '') ? 'border-bottom: 2px solid #fff;' : '' ?>">
 						Home
 					</a>
 				</li>
@@ -82,8 +69,8 @@
 				</li> -->
 
 				<li class="nav-item">
-					<a href="<?php echo base_url('logs') ?>" class="nav-link" style="<?php echo ($url == 'logs') ? 'border-bottom: 2px solid #fff;' : '' ?>">
-						Logs
+					<a href="<?php echo base_url('sms-logs') ?>" class="nav-link" style="<?php echo ($url == 'sms-logs') ? 'border-bottom: 2px solid #fff;' : '' ?>">
+						SMS Logs
 					</a>
 				</li>
 
@@ -92,7 +79,6 @@
 						Contact Us
 					</a>
 				</li>
-
 
 				<?php if ($this->session->userdata('logged_in')) : ?>
 					<li class="nav-item">
